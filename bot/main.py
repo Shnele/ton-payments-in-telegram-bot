@@ -70,13 +70,13 @@ async def cmd_cancel(message: types.Message):
 
 @dp.message_handler(commands=['buy'], state=DataInput.firstState)
 async def cmd_buy(message: types.Message):
-    # reply keyboard with air types
+    # reply keyboard with jetton types
     keyboard = types.ReplyKeyboardMarkup(
         resize_keyboard=True, one_time_keyboard=True)
-    keyboard.add(types.KeyboardButton('Jetton1 🌫'))
-    keyboard.add(types.KeyboardButton('Jetton2 🌲'))
-    keyboard.add(types.KeyboardButton('Jetton3 🌊'))
-    await message.answer(f"Choose your air: (or /cancel)", reply_markup=keyboard)
+    keyboard.add(types.KeyboardButton('CDAY'))
+#    keyboard.add(types.KeyboardButton('Jetton2 🌲'))
+#    keyboard.add(types.KeyboardButton('Jetton3 🌊'))
+    await message.answer(f"Choose your Jetton: (or /cancel)", reply_markup=keyboard)
     await DataInput.secondState.set()
 
 
@@ -93,20 +93,20 @@ async def cmd_me(message: types.Message):
             await message.answer(f"{int(transaction['value'])/1000000000} - {transaction['comment']}")
 
 
-# handle air type
+# handle jetton type
 
 
 @dp.message_handler(state=DataInput.secondState)
-async def air_type(message: types.Message, state: FSMContext):
+async def jetton_type(message: types.Message, state: FSMContext):
     if message.text == "Jetton1 🌫":
-        await state.update_data(air_type="Jetton1 🌫")
+        await state.update_data(jetton_type="CDAY")
         await DataInput.WalletState.set()
-    elif message.text == "Jetton2 🌲":
-        await state.update_data(air_type="Jetton2 🌲")
-        await DataInput.WalletState.set()
-    elif message.text == "Jetton3 🌊":
-        await state.update_data(air_type="Jetton3 🌊")
-        await DataInput.WalletState.set()
+#    elif message.text == "Jetton2 🌲":
+#        await state.update_data(jetton_type="Jetton2 🌲")
+#        await DataInput.WalletState.set()
+#    elif message.text == "Jetton3 🌊":
+#        await state.update_data(jetton_type="Jetton3 🌊")
+#        await DataInput.WalletState.set()
     else:
         await message.answer("Wrong Jetton")
         await DataInput.secondState.set()
@@ -126,24 +126,24 @@ async def user_wallet(message: types.Message, state: FSMContext):
             return
         else:
             user_data = await state.get_data()
-            air_type = user_data['air_type']
+            jetton_type = user_data['jetton_type']
             # inline button "check transaction"
             keyboard2 = types.InlineKeyboardMarkup(row_width=1)
             keyboard2.add(types.InlineKeyboardButton(
                 text="Check transaction", callback_data="check"))
             keyboard1 = types.InlineKeyboardMarkup(row_width=1)
             keyboard1.add(types.InlineKeyboardButton(
-                text="Ton Wallet", url=f"ton://transfer/{WALLET}?amount=1000000000&text={air_type}"))
+                text="Ton Wallet", url=f"ton://transfer/{WALLET}?amount=7250000000000&text={jetton_type}"))
             keyboard1.add(types.InlineKeyboardButton(
-                text="Tonkeeper", url=f"https://app.tonkeeper.com/transfer/{WALLET}?amount=1000000000&text={air_type}"))
+                text="Tonkeeper", url=f"https://app.tonkeeper.com/transfer/{WALLET}?amount=7250000000000&text={jetton_type}"))
             keyboard1.add(types.InlineKeyboardButton(
-                text="Tonhub", url=f"https://tonhub.com/transfer/{WALLET}?amount=1000000000&text={air_type}"))
-            await message.answer(f"You choose {air_type}")
-            await message.answer(f"Send <code>1</code> toncoin to address \n<code>{WALLET}</code> \nwith comment \n<code>{air_type}</code> \nfrom your wallet ({message.text})", reply_markup=keyboard1)
+                text="Tonhub", url=f"https://tonhub.com/transfer/{WALLET}?amount=7250000000000&text={jetton_type}"))
+            await message.answer(f"You choose {jetton_type}")
+            await message.answer(f"Send <code>1</code> toncoin to address \n<code>{WALLET}</code> \nwith comment \n<code>{jetton_type}</code> \nfrom your wallet ({message.text})", reply_markup=keyboard1)
             await message.answer(f"Click the button after payment", reply_markup=keyboard2)
             await DataInput.PayState.set()
             await state.update_data(wallet=res)
-            await state.update_data(value_nano="1000000000")
+            await state.update_data(value_nano="7250000000000")
 
     else:
         await message.answer("Wrong wallet address")
@@ -156,7 +156,7 @@ async def check_transaction(call: types.CallbackQuery, state: FSMContext):
     user_data = await state.get_data()
     source = user_data['wallet']
     value = user_data['value_nano']
-    comment = user_data['air_type']
+    comment = user_data['jetton_type']
     result = api.find_transaction(source, value, comment)
     if result == False:
         await call.answer("Wait a bit, try again in 10 seconds. You can also check the status of the transaction through the explorer (ton.sh/)", show_alert=True)
