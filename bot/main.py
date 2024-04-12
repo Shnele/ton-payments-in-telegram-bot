@@ -53,10 +53,10 @@ async def cmd_start(message: types.Message):
     # if user already in database, we can address him differently
     if isOld == False:
         await message.answer(f"You are new here, {message.from_user.first_name}!")
-        await message.answer(f"to buy air send /buy")
+        await message.answer(f"to buy jettons send /buy")
     else:
         await message.answer(f"Welcome once again, {message.from_user.first_name}!")
-        await message.answer(f"to buy more air send /buy")
+        await message.answer(f"to buy more jettons send /buy")
 
     await DataInput.firstState.set()
 
@@ -73,10 +73,9 @@ async def cmd_buy(message: types.Message):
     # reply keyboard with air types
     keyboard = types.ReplyKeyboardMarkup(
         resize_keyboard=True, one_time_keyboard=True)
-    keyboard.add(types.KeyboardButton('Just pure 🌫'))
-    keyboard.add(types.KeyboardButton('Spring forest 🌲'))
-    keyboard.add(types.KeyboardButton('Sea breeze 🌊'))
-    keyboard.add(types.KeyboardButton('Fresh asphalt 🛣'))
+    keyboard.add(types.KeyboardButton('Jetton1 🌫'))
+    keyboard.add(types.KeyboardButton('Jetton2 🌲'))
+    keyboard.add(types.KeyboardButton('Jetton3 🌊'))
     await message.answer(f"Choose your air: (or /cancel)", reply_markup=keyboard)
     await DataInput.secondState.set()
 
@@ -99,20 +98,17 @@ async def cmd_me(message: types.Message):
 
 @dp.message_handler(state=DataInput.secondState)
 async def air_type(message: types.Message, state: FSMContext):
-    if message.text == "Just pure 🌫":
-        await state.update_data(air_type="Just pure 🌫")
+    if message.text == "Jetton1 🌫":
+        await state.update_data(air_type="Jetton1 🌫")
         await DataInput.WalletState.set()
-    elif message.text == "Fresh asphalt 🛣":
-        await state.update_data(air_type="Fresh asphalt 🛣")
+    elif message.text == "Jetton2 🌲":
+        await state.update_data(air_type="Jetton2 🌲")
         await DataInput.WalletState.set()
-    elif message.text == "Spring forest 🌲":
-        await state.update_data(air_type="Spring forest 🌲")
-        await DataInput.WalletState.set()
-    elif message.text == "Sea breeze 🌊":
-        await state.update_data(air_type="Sea breeze 🌊")
+    elif message.text == "Jetton3 🌊":
+        await state.update_data(air_type="Jetton3 🌊")
         await DataInput.WalletState.set()
     else:
-        await message.answer("Wrong air type")
+        await message.answer("Wrong Jetton")
         await DataInput.secondState.set()
         return
     await message.answer(f"Send your wallet address")
