@@ -5,7 +5,7 @@ import json
 
 
 def get_now():
-    return datetime.datetime.now(pytz.timezone('Europe/Moscow')).strftime('%d-%m-%Y')
+    return datetime.datetime.now(pytz.timezone('Europe/Reykjavik')).strftime('%d-%m-%Y')
 
 
 locCon = sqlite3.connect('bot/local.db', check_same_thread=False)
